@@ -11,15 +11,18 @@ module tt_um_db_PWM(
     input  wire       rst_n     // reset_n - low to reset
 
     );
-    parameter BITS_duty = 5;
+    parameter BITS_duty = 3;
     wire clk_in = clk;
     wire rst = !rst_n;
     wire [BITS_duty:0] duty  = ui_in;
     wire pwm_out;
 
-    reg [BITS_duty:0] cnt;
-    reg pwm_d, pwm_q;
+     reg [BITS_duty:0] cnt;
+    reg pwm_q;
+    wire pwm_d;
 
+    assign pwm_d = (cnt < duty);  
+    
     always @(posedge clk_in or posedge rst) begin
         if(rst) begin
          pwm_q <=0;
@@ -34,9 +37,7 @@ module tt_um_db_PWM(
          end
         end
     end
-    
-    always @(*) pwm_d = (cnt < duty);  
-    
+
     assign uo_out[0] = pwm_q;
 
 endmodule
