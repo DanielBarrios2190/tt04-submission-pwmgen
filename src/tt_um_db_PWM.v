@@ -17,27 +17,29 @@ module tt_um_db_PWM(
     reg [BITS_duty:0] cnt;
     wire [BITS_duty:0] duty;
     reg pwm_q;
-    wire pwm_d;
+    reg pwm_d;
 
     assign duty = ui_in [3:0];
     
     
     always @(posedge clk) begin
-        if(~rst_n) begin
-         pwm_q <= 1'b0;
-         cnt <= 0;
-        end else begin
+        if(rst_n) begin
          pwm_q <= pwm_d;
-         
+         pwm_d <= (cnt < duty);        
          if((cnt >= (2**BITS_duty)-1))
             cnt <= 0;
          else begin      
             cnt <= cnt + 1;
          end
+
+        end else begin
+         pwm_q <= 1'b0;
+         pwm_d <= 1'b0;
+         cnt <= 0;
         end
     end
 
-    assign pwm_d = (cnt < duty);
+
     
     assign uo_out[0] = pwm_q;
     
