@@ -35,3 +35,9 @@ def PWM_tb(dut):
     yield cocotb.utils.simulator_yield(1, 'ns')
     cocotb.log.info("Simulation complete")
 
+# Create the test factory
+factory = TestFactory(PWM_tb)
+factory.generate_tests()
+
+# Run the simulation
+cocotb.run()

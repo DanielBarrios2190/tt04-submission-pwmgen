@@ -28,37 +28,38 @@ documentation:
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Explain how your project works
+      The PWM Generator takes a clock and generates a PWM by comparating the selected bus against a counter. Another input is added to determine the maximum resolution for the counter (meaning high resolution requires more bits for counting, which results in an overall lower frequency). By dinamically changing the counter max it is easy to generate the new signal. Also a DFF is added to the output of the comparator in order to synchronize the signal and reduce the possible glitches that can arise by changing values mid-run.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Explain how to test your project
+      To test, just connect the duty bus to the desired value at the output, while also setting the Maximum Bits in the bidirectional pins to the desired quantity (max - 111). After pressing restart the PWM should work as desired.
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
+    - Duty[0]
+    - Duty[1]
+    - Duty[2]
+    - Duty[3]
+    - Duty[4]
+    - Duty[5]
+    - Duty[6]
+    - Duty[7]
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - segment a
-    - segment b
-    - segment c
-    - segment d
-    - segment e
-    - segment f
-    - segment g
-    - dot
+    - PWM output
+    - none
+    - none
+    - none
+    - none
+    - none
+    - none
+    - none
+    - none
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
-    - none
-    - none
-    - none
+    - Bit selector [0]
+    - Bit selector [1]
+    - Bit selector [2]
     - none
     - none
     - none
