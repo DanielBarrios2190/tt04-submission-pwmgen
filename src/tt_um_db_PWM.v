@@ -33,10 +33,10 @@ module tt_um_db_PWM(
             
     always @(*) begin
         if((q_cnt >= (2**BITS_duty)-1))
-            d_cnt <= 0;
+            d_cnt = 0;
         else 
-            d_cnt <= q_cnt + 1;
-        pwm_d <= (q_cnt < duty);
+            d_cnt = q_cnt + 1;
+        pwm_d = (q_cnt < duty);
     end
     
     assign uo_out[0] = pwm_q;
