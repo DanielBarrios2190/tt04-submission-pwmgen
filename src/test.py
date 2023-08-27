@@ -1,43 +1,51 @@
 import cocotb
-from cocotb.regression import TestFactory
-from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles
+import struct
 
-@cocotb.coroutine
-def PWM_tb(dut):
-    # Initialize signals
-    clk_period = 2  # Clock period in nanoseconds
-    rst_ns = 5     # Reset time in nanoseconds
-    clk_ns = clk_period / 2
+from cocotb.clock import Clock
+from cocotb.triggers import ClockCycles, RisingEdge, FallingEdge
+
+@cocotb.test()
+async def test_PWM(dut):
+    dut._log.info("start")
+    clock = Clock(dut.clk, 10, units="us")
+    cocotb.start_soon(clock.start())
 
     # Apply reset
-    dut.rst <= 1
-    yield cocotb.utils.simulator_yield(rst_ns, 'ns')
-    dut.rst <= 0
+    dut._log.info("Start")
+    dut.rst_n.value = 0
+    dut.uio_in.value = 0b011
+    dut.ui_in.value = 0b00000000
+
+    await ClockCycles(dut.clk, 2)
+    dut.rst_n.value = 1
 
     # Test cases
     for bits_value in [0b011, 0b100, 0b111, 0b010, 0b000]:
-        dut.bits <= bits_value
-        duty_value = 0.5 * (2 ** bits_value)
-        dut.duty <= duty_value
+        dut._log.info("25 Duty")
+        dut.uio_in.value = bits_value
+        #pad = binary_rep.zfill(len(dut.ui_in))
+        btf = float(bits_value)
+        ftn = int(0.5*(2**bits_value))
+        
+        dut.ui_in.value = ftn
 
-        yield ClockCycles(dut.clk, 200)  # Wait for some cycles
+        await ClockCycles(dut.clk, 400)  # Wait for some cycles
 
-        duty_value = 0.25 * (2 ** bits_value)
-        dut.duty <= duty_value
-        yield ClockCycles(dut.clk, 400)
+        dut._log.info("50 Duty")
+        btf = float(bits_value)
+        ftn = int(0.5*(2**bits_value))
+        
+        dut.ui_in.value = ftn
+        await ClockCycles(dut.clk, 400)
 
-        duty_value = 0.75 * (2 ** bits_value)
-        dut.duty <= duty_value
-        yield ClockCycles(dut.clk, 400)
+        dut._log.info("75 Duty")
+        btf = float(bits_value)
+        ftn = int(0.5*(2**bits_value))
+        
+        dut.ui_in.value = ftn
+
+        await ClockCycles(dut.clk, 400)
 
     # Wait for the simulation to complete
-    yield ClockCycles(dut.clk, 400)
-    yield cocotb.utils.simulator_yield(1, 'ns')
+    await ClockCycles(dut.clk, 400)
     cocotb.log.info("Simulation complete")
-
-# Create the test factory
-factory = TestFactory(PWM_tb)
-factory.generate_tests()
-
-# Run the simulation
-cocotb.run()
