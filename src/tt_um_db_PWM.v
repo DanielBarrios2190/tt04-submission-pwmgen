@@ -1,5 +1,7 @@
 `timescale 1ns / 1ps
 
+`timescale 1ns / 1ps
+
 module tt_um_db_PWM(
     input  wire [7:0] ui_in,    // Dedicated inputs - connected to the input switches
     output wire [7:0] uo_out,   // Dedicated outputs - connected to the 7 segment display
@@ -12,26 +14,26 @@ module tt_um_db_PWM(
     
     );
     
-    
-    parameter BITS_duty = 3;
+    wire [2:0] bits;
 
-    reg [BITS_duty:0] cnt;
-    wire [BITS_duty:0] duty;
+    reg [7:0] cnt;
+    wire [7:0] duty;
     reg pwm_q;
     wire pwm_d;
 
-    assign duty = ui_in [3:0];
+    assign duty = ui_in [7:0];
+    assign bits = uio_in[2:0];
+
     assign pwm_d = (cnt < duty);
-    assign uio_oe = 8'b11111111;
+    assign uio_oe = 8'b11111000;
     assign uio_out[7:0] = 8'b00000000;
     assign uo_out[7:1] = 7'b0000000;
-    
     
     always @(posedge clk) begin
       if(rst_n) begin
          pwm_q <= pwm_d;
                  
-        if((cnt >= (2**BITS_duty)-1))
+        if((cnt >= (2**bits)))
             cnt <= 0;
         else begin     
             cnt <= cnt + 1;
@@ -43,8 +45,16 @@ module tt_um_db_PWM(
       end
     end
     
-    assign uo_out[0] = (cnt < duty);
+    always @(posedge bits or negedge bits) begin
+        cnt <= 0;
+        pwm_q <= 1'b0;
+    end
+    
+    assign pwm_d = (cnt < duty);
+    assign uo_out[0] = pwm_q;
     
 
+
 endmodule
+
 
