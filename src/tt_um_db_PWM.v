@@ -8,31 +8,26 @@ module tt_um_db_PWM(
     output wire [7:0] uio_oe,   // IOs: Bidirectional Enable path (active high: 0=input, 1=output)
     input  wire       ena,      // will go high when the design is enabled
     input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
-
+    input  wire       rst_n     // reset_n - low to 
+    
     );
-    parameter BITS_duty = 3;
-    wire clk_in;
-    wire rst;
-    wire [BITS_duty:0] duty;
-    //wire pwm_out;
 
-    assign duty = ui_in[BITS_duty:0];
-    assign clk_in = clk;
-    assign rst = ~rst_n;
+    parameter BITS_duty = 3;
 
     reg [BITS_duty:0] cnt;
-    //reg pwm_q;
-    //wire pwm_d;
+    wire [BITS_duty:0] duty;
+    reg pwm_q;
+    wire pwm_d;
 
-    //assign pwm_d = (cnt < duty);  
+    assign duty = ui_in [3:0];
     
-    always @(posedge clk_in or posedge rst) begin
-        if(rst) begin
-         //pwm_q <=0;
+    
+    always @(posedge clk) begin
+        if(~rst_n) begin
+         pwm_q <= 1'b0;
          cnt <= 0;
         end else begin
-         //pwm_q <= pwm_d;
+         pwm_q <= pwm_d;
          
          if((cnt >= (2**BITS_duty)-1))
             cnt <= 0;
@@ -42,6 +37,11 @@ module tt_um_db_PWM(
         end
     end
 
-    assign uo_out[0] = (cnt < duty);
+    assign pwm_d = (cnt < duty);
+    
+    assign uo_out[0] = pwm_q;
+    
 
 endmodule
+
+
