@@ -35,7 +35,7 @@ module tt_um_db_PWM(
         end
     end
     
-    always @(*) pwm_d <= (cnt < duty);  
+    always @(*) pwm_d = (cnt < duty);  
     
     assign uo_out[0] = pwm_q;
 
