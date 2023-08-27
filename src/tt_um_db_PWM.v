@@ -23,7 +23,6 @@ module tt_um_db_PWM(
     assign duty = ui_in [7:0];
     assign bits = uio_in[2:0];
 
-    assign pwm_d = (cnt < duty);
     assign uio_oe = 8'b11111000;
     assign uio_out[7:0] = 8'b00000000;
     assign uo_out[7:1] = 7'b0000000;
