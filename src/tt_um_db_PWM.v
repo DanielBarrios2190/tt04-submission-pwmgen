@@ -26,11 +26,11 @@ module tt_um_db_PWM(
         if(rst_n) begin
          pwm_q <= pwm_d;
          pwm_d <= (cnt < duty);        
-         if((cnt >= (2**BITS_duty)-1))
-            cnt <= 0;
-         else begin      
-            cnt <= cnt + 1;
-         end
+         //if((cnt >= (2**BITS_duty)-1))
+         //   cnt <= 0;
+         //else begin      
+         //   cnt <= cnt + 1;
+         //end
 
         end else begin
          pwm_q <= 1'b0;
