@@ -1,10 +1,10 @@
 import cocotb
-from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, FallingEdge, Timer, ClockCycles
+from cocotb.regression import TestFactory
+from cocotb.triggers import RisingEdge, FallingEdge, ClockCycles
 
-
-@cocotb.test()
-async def test_7seg(dut):
+@cocotb.coroutine
+def PWM_tb(dut):
+    # Initialize signals
     clk_period = 2  # Clock period in nanoseconds
     rst_ns = 5     # Reset time in nanoseconds
     clk_ns = clk_period / 2
