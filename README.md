@@ -1,5 +1,17 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/wokwi_test/badge.svg)
 
+# PWM Generator with adjustable counter
+
+## How does it work
+
+![Circuit](https://github.com/DanielBarrios2190/tt04-submission-pwmgen/assets/68023784/d1bf3b11-455f-4bef-a413-dcc18184f1c5)
+
+The PWM Generator takes a clock and generates a PWM by comparating the selected bus against a counter. Another input is added to determine the maximum resolution for the counter (meaning high resolution requires more bits for counting, which results in an overall lower frequency). By dinamically changing the counter max it is easy to generate the new signal. Also a DFF is added to the output of the comparator in order to synchronize the signal and reduce the possible glitches that can arise by changing values mid-run.
+
+## How do we test it
+
+To test, just connect the duty bus to the desired value at the output, while also setting the Maximum Bits in the bidirectional pins to the desired quantity (max - 111). After pressing restart the PWM should work as desired.
+
 # What is Tiny Tapeout?
 
 TinyTapeout is an educational project that aims to make it easier and cheaper than ever to get your digital designs manufactured on a real chip!
